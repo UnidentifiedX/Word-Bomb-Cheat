@@ -19,6 +19,8 @@ last_turn_check = 0
 join_game_timer = 0
 is_turn = False
 
+screen_width, screen_height = pyautogui.size()
+
 with open(WORD_LIST) as word_file:
     valid_words = set(word_file.read().split())
 
@@ -133,7 +135,10 @@ def enter_text(text, speed=TYPING_SPEED):
 
 def check_is_turn(threshold=60):
     try:
-        img = camera.grab((1000, 1350, 1600, 1390))
+        img = camera.grab((int(screen_width * 0.39), 
+                           int(screen_height * 0.94), 
+                           int(screen_width * 0.63), 
+                           int(screen_height * 0.97))) # normalized because i use a 1440p monitor
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
         # convert to black and white
@@ -155,15 +160,21 @@ while True:
         last_turn_check = time.time()
     
     if time.time() - join_game_timer > JOIN_GAME_DELAY:
-        pyautogui.click(1120, 800)
+        pyautogui.click(int(screen_width * 0.44), int(screen_height * 0.56))
         join_game_timer = time.time()
 
     # if key m is pressed, do something
     if keyboard.is_pressed("esc") or is_turn:
         try:
             # take a screenshot of the screen
-            bottom_img = np.array(pyscreenshot.grab(bbox=(1033, 888, 1219, 937)))
-            top_img = np.array(pyscreenshot.grab(bbox=(1033, 513, 1219, 559)))
+            bottom_img = np.array(pyscreenshot.grab(bbox=(int(screen_width * 0.4), 
+                                                          int(screen_height * 0.62), 
+                                                          int(screen_width * 0.48), 
+                                                          int(screen_height * 0.65)))) # normalized
+            top_img = np.array(pyscreenshot.grab(bbox=(int(screen_width * 0.4), 
+                                                       int(screen_height * 0.36), 
+                                                       int(screen_width * 0.48), 
+                                                       int(screen_height * 0.39)))) # normalized
 
             bottom_img = bottom_img[:, :, ::-1].copy()
             top_img = top_img[:, :, ::-1].copy()
